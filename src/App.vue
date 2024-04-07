@@ -3,7 +3,5 @@
 </script>
 
 <template>
-	<main>
-		<Navigation />
-	</main>
+	<Navigation />
 </template>
