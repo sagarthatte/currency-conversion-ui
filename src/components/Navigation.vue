@@ -3,7 +3,7 @@
 </script>
 
 <template>
-	<v-app>
+	<v-app class="main-app">
 		<v-app-bar color="black">
 			<div class="d-flex align-center">
 				<v-app-bar-title class="ml-4">My Currency Converter</v-app-bar-title>
@@ -16,11 +16,7 @@
 			</div>	
 		</v-app-bar>
 		<v-main>
-			<v-container fluid>
-				<v-row>
-					<router-view />
-				</v-row>
-			</v-container>
+			<router-view />
 		</v-main>
 	</v-app>
 </template>
@@ -28,6 +24,8 @@
 <style>
 	#app {
 		height: 100vh;
-		
+	}
+	.main-app {
+		width: 600px;
 	}
 </style>

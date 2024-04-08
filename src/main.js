@@ -8,10 +8,13 @@ import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
+import * as styles from 'vuetify/styles'
+import '@mdi/font/css/materialdesignicons.css'
 
 const vuetify = createVuetify({
     components,
-    directives
+    directives,
+    styles
 });
 
 const pinia = createPinia();
