@@ -13,6 +13,7 @@
 	const getToken = async () => {
 		await axios.get('/sanctum/csrf-cookie');
 	}
+	
 	const submitLogin = async() => {
 		await getToken();
 		await axios.post('/login', {
