@@ -16,6 +16,14 @@ export const useAuthStore = defineStore('auth', {
             this.getToken();
             const response = await axios.get('/api/user');
             this.authUser = response.data;
+        },
+        async handleLogin (data) {
+            await this.getToken();
+            await axios.post('/login', {
+                email: data.email,
+                password: data.password
+            });
+            this.router.push('/');
         }
     }
 });

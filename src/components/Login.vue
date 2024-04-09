@@ -1,27 +1,14 @@
 <script setup>
 	import { ref } from 'vue';
-	import axios from 'axios';
-	import { useRouter } from 'vue-router';
+	import { useAuthStore } from '../stores/auth';
 
-	const router = useRouter();
-	
-	const form = ref({
+	const authStore = useAuthStore();
+
+	const loginForm = ref({
 		email: '',
 		password: ''
 	});
-
-	const getToken = async () => {
-		await axios.get('/sanctum/csrf-cookie');
-	}
 	
-	const submitLogin = async() => {
-		await getToken();
-		await axios.post('/login', {
-			email: form.value.email,
-			password: form.value.password
-		});
-		router.push('/');
-	}
 </script>
 
 <template>
@@ -32,12 +19,12 @@
 					<v-card-title class="text-left ml-2">
 						<span class="font-weight-bold">Log In</span>
 					</v-card-title>
-					<v-form @submit.prevent="submitLogin">
+					<v-form @submit.prevent="authStore.handleLogin(loginForm)">
 						<v-card-text class="ml-2">
 							<div class="text-left font-weight-medium">Email</div>
-							<v-text-field v-model="form.email" required type="email" outlined fullWidth />
+							<v-text-field v-model="loginForm.email" required type="email" outlined fullWidth />
 							<div class="font-weight-medium text-left">Password</div>
-							<v-text-field v-model="form.password" required type="password" outlined fullWidth />
+							<v-text-field v-model="loginForm.password" required type="password" outlined fullWidth />
 						</v-card-text>
 						<v-card-actions>
 							<router-link :to="{name: 'ResetPassword'}" tag="v-btn">
@@ -46,7 +33,7 @@
 								</v-btn>
 							</router-link>
 							<v-spacer></v-spacer>
-							<v-btn variant="tonal" color="#5865f2" type="submit" class="mr-2" :disabled="!form.email || !form.password">
+							<v-btn variant="tonal" color="#5865f2" type="submit" class="mr-2" :disabled="!loginForm.email || !loginForm.password">
 								Log In
 							</v-btn>
 						</v-card-actions>

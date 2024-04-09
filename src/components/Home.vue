@@ -1,9 +1,8 @@
 <script setup>
-	import { ref, onMounted } from 'vue';
+	import { onMounted } from 'vue';
 	import { useAuthStore } from '../stores/auth';
 	import ApplicationLogo from './ApplicationLogo.vue';
 
-	const user = ref();
 	const authStore = useAuthStore();
 
 	onMounted(async() => {

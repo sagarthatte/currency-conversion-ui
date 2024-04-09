@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import { createApp, markRaw } from 'vue'
 import { createPinia } from 'pinia'
 import router from './router'
 import './axios'
@@ -19,6 +19,10 @@ const vuetify = createVuetify({
 
 const pinia = createPinia();
 const app = createApp(App);
+// Enable routing inside pinia store
+pinia.use(({store}) => {
+    store.router = markRaw(router);
+});
 app.use(pinia);
 app.use(router);
 app.use(vuetify);
