@@ -8,19 +8,7 @@
 		methods: {
 			async requestPasswordResetEmail() {
 				console.log('Password Reset requested');
-				// try {
-				// 	const response = await axios.post(`${process.env.VUE_APP_API_URL}/login`, {
-				// 		email: this.email,
-				// 		password: this.password,
-				// 		remember: this.rememberMe
-				// 	});
-
-				// 	// Handle successful login based on response data (e.g., store token, redirect)
-				// 	console.log('Login successful:', response.data);
-				// } catch (error) {
-				// 	console.error('Login error:', error);
-				// 	// Handle login errors (e.g., display error message)
-				// }
+				// TODO: Add actual code for reset password endpoint functionality
 			},
 		},
 	};

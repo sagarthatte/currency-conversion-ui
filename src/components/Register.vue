@@ -1,32 +1,16 @@
 <script setup>
 	import { ref } from 'vue';
-	import axios from 'axios';
-	import { useRouter } from 'vue-router';
+	import { useAuthStore } from '../stores/auth';
 
-	const router = useRouter();
+	const authStore = useAuthStore();
 
-	const form = ref({
+	const registerForm = ref({
 		name: '',
 		email: '',
 		password: '',
 		confirmPassword: ''
 	});
 
-	// const getToken = async () => {
-	// 	await axios.get('/sanctum/csrf-cookie');
-	// }
-
-	const handleRegistration = async () => {
-		// await getToken();
-		await axios.post('/register', {
-			name: form.value.name,
-			email: form.value.email,
-			password: form.value.password,
-			password_confirmation: form.value.confirmPassword
-		});
-		router.push('/');
-	};
-	
 </script>
 
 <template>
@@ -37,16 +21,16 @@
 					<v-card-title class="text-left ml-2">
 						<span class="font-weight-bold">Register</span>
 					</v-card-title>
-					<v-form @submit.prevent="handleRegistration">
+					<v-form @submit.prevent="authStore.handleRegister(registerForm)">
 						<v-card-text class="ml-2">
 							<div class="text-left font-weight-medium">Name</div>
-							<v-text-field v-model="form.name" required type="text" outlined fullWidth />
+							<v-text-field v-model="registerForm.name" required type="text" outlined fullWidth />
 							<div class="text-left font-weight-medium">Email</div>
-							<v-text-field v-model="form.email" required type="email" outlined fullWidth />
+							<v-text-field v-model="registerForm.email" required type="email" outlined fullWidth />
 							<div class="text-left font-weight-medium">Password</div>
-							<v-text-field v-model="form.password" required type="password" outlined fullWidth />
+							<v-text-field v-model="registerForm.password" required type="password" outlined fullWidth />
 							<div class="text-left font-weight-medium">Confirm Password</div>
-							<v-text-field v-model="form.confirmPassword" required type="password" outlined fullWidth />
+							<v-text-field v-model="registerForm.confirmPassword" required type="password" outlined fullWidth />
 						</v-card-text>
 						<v-card-actions>
 							<router-link :to="{name: 'Login'}" tag="v-btn">
