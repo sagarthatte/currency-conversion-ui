@@ -24,13 +24,22 @@
 					<v-form @submit.prevent="authStore.handleRegister(registerForm)">
 						<v-card-text class="ml-2">
 							<div class="text-left font-weight-medium">Name</div>
-							<v-text-field v-model="registerForm.name" required type="text" outlined fullWidth />
+							<v-text-field v-model="registerForm.name" type="text" outlined fullWidth />
+							<div v-if="authStore.errors.name" class="text-left mb-2">
+								<span class="text-red">{{ authStore.errors.name[0] }}</span>
+							</div>
 							<div class="text-left font-weight-medium">Email</div>
-							<v-text-field v-model="registerForm.email" required type="email" outlined fullWidth />
+							<v-text-field v-model="registerForm.email" type="email" outlined fullWidth />
+							<div v-if="authStore.errors.email" class="text-left mb-2">
+								<span class="text-red">{{ authStore.errors.email[0] }}</span>
+							</div>
 							<div class="text-left font-weight-medium">Password</div>
-							<v-text-field v-model="registerForm.password" required type="password" outlined fullWidth />
+							<v-text-field v-model="registerForm.password" type="password" outlined fullWidth />
+							<div v-if="authStore.errors.password" class="text-left mb-2">
+								<span class="text-red">{{ authStore.errors.password[0] }}</span>
+							</div>
 							<div class="text-left font-weight-medium">Confirm Password</div>
-							<v-text-field v-model="registerForm.confirmPassword" required type="password" outlined fullWidth />
+							<v-text-field v-model="registerForm.confirmPassword" type="password" outlined fullWidth />
 						</v-card-text>
 						<v-card-actions>
 							<router-link :to="{name: 'Login'}" tag="v-btn">

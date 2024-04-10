@@ -22,18 +22,25 @@
 					<v-form @submit.prevent="authStore.handleLogin(loginForm)">
 						<v-card-text class="ml-2">
 							<div class="text-left font-weight-medium">Email</div>
-							<v-text-field v-model="loginForm.email" required type="email" outlined fullWidth />
+							<v-text-field v-model="loginForm.email" type="email" outlined fullWidth />
+							<div v-if="authStore.errors.email" class="text-left mb-2">
+								<span class="text-red">{{ authStore.errors.email[0] }}</span>
+							</div>
 							<div class="font-weight-medium text-left">Password</div>
-							<v-text-field v-model="loginForm.password" required type="password" outlined fullWidth />
+							<v-text-field v-model="loginForm.password" type="password" outlined fullWidth />
+							<div v-if="authStore.errors.password" class="text-left mb-2">
+								<span class="text-red">{{ authStore.errors.password[0] }}</span>
+							</div>
 						</v-card-text>
 						<v-card-actions>
-							<router-link :to="{name: 'ResetPassword'}" tag="v-btn">
+							<router-link :to="{name: 'ForgotPassword'}" tag="v-btn">
 								<v-btn color="info" flat class="ml-2">
 									Forgot password?
 								</v-btn>
 							</router-link>
 							<v-spacer></v-spacer>
-							<v-btn variant="tonal" color="#5865f2" type="submit" class="mr-2" :disabled="!loginForm.email || !loginForm.password">
+							<v-btn variant="tonal" color="#5865f2" type="submit" class="mr-2">
+								<!-- :disabled="!loginForm.email || !loginForm.password" -->
 								Log In
 							</v-btn>
 						</v-card-actions>
