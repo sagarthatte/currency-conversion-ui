@@ -18,7 +18,7 @@
 					<v-form @submit.prevent="authStore.handleForgotPassword(email)">
 						<v-card-text class="ml-2">
 							<div v-if="authStore.status" class="text-left mb-2 font-weight-medium text-green">
-								{{  authStore.status }}
+								{{ authStore.status }}
 							</div>
 							<div class="text-left">
 								Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.

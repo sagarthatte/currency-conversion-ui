@@ -24,6 +24,9 @@
 					</v-card-title>
 					<v-form @submit.prevent="authStore.handleResetPassword(resetPasswordForm)">
 						<v-card-text class="ml-2">
+							<div v-if="authStore.status" class="text-left mb-2 font-weight-medium text-green">
+								{{ authStore.status }}
+							</div>
 							<div class="text-left font-weight-medium mt-2">Email</div>
 							<v-text-field readonly v-model="resetPasswordForm.email" type="email" outlined fullWidth />
 							<div v-if="authStore.errors.email" class="text-left mb-2">
