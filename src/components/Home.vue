@@ -13,7 +13,8 @@
 
 <template>
 	<!-- TODO: Make guest and authenticayed layout templates -->
-	<ApplicationLogo class="block h-9 w-auto" />
+	<ApplicationLogo class="block h-9 w-auto mb-9" />
+	
 	<div v-if="authStore.user">
 		<h3>Hello {{ authStore.user.name }} ({{  authStore.user.email }})</h3>
 	</div>
