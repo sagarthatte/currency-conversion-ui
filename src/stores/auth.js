@@ -25,6 +25,10 @@ export const useAuthStore = defineStore('auth', {
             });
             this.router.push('/');
         },
+        async handleLogout () {
+            await axios.post('/logout');
+            this.authUser = null;
+        },
         async handleRegister (data) {
             await this.getToken();
             await axios.post('/register', {
