@@ -4,9 +4,7 @@
 
 	const authStore = useAuthStore();
 
-	const forgotPasswordForm = ref({
-		email: ''
-	});
+	const email = ref('');
 </script>
 
 <template>
@@ -17,13 +15,13 @@
 					<v-card-title class="text-left ml-2">
 						<span class="font-weight-bold">Reset Password</span>
 					</v-card-title>
-					<v-form @submit.prevent="authStore.handleForgotPassword(forgotPasswordForm)">
+					<v-form @submit.prevent="authStore.handleForgotPassword(email)">
 						<v-card-text class="ml-2">
 							<div class="text-left">
 								Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
 							</div>
 							<div class="text-left font-weight-medium mt-2">Email</div>
-							<v-text-field v-model="forgotPasswordForm.email" type="email" outlined fullWidth />
+							<v-text-field v-model="email" type="email" outlined fullWidth />
 							<div v-if="authStore.errors.email" class="text-left mb-2">
 								<span class="text-red">{{ authStore.errors.email[0] }}</span>
 							</div>

@@ -56,12 +56,12 @@ export const useAuthStore = defineStore('auth', {
 				}
 			}
 		},
-		async handleForgotPassword (data) {
+		async handleForgotPassword (email) {
 			this.authErrors = [];
 			try {
 				this.getToken();
 				await axios.post('/forgot-password', {
-					email: data.email
+					email: email
 				});
 
 			} catch (error) {
