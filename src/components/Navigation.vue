@@ -31,9 +31,10 @@
 
 <style>
 	#app {
-		height: 100vh;
+		height: 200vh;
 	}
 	.main-app {
-		width: 600px;
+		width: 550px;
+		height: 800px;
 	}
 </style>
