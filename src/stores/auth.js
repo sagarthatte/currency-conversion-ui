@@ -84,6 +84,9 @@ export const useAuthStore = defineStore('auth', {
 					this.authErrors = error.response.data.errors;
 				}
 			}
+		},
+		async handleConvertCurrency () {
+			
 		}
 	}
 });
