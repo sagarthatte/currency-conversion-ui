@@ -19,7 +19,7 @@
 					<router-link :to="{name: 'Register'}" class="mx-3 font-weight-bold">Register</router-link>
 				</template>
 				<template v-else>
-					<v-label for="" class="mt-5 font-weight-medium">Hello, {{ authStore.user.name }}</v-label>
+					<v-label class="mt-5 font-weight-medium">Hello, {{ authStore.user.name }}</v-label>
 					<v-btn variant="tonal" color="black" @click="authStore.handleLogout" class="mx-3 text-none font-weight-bold">Logout</v-btn>
 				</template>
 			</div>	
