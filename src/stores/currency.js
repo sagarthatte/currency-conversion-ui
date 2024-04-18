@@ -8,12 +8,14 @@ export const useCurrencyStore = defineStore('currency', {
 		currencyResults: null,
 		currencySelectError: '',
 		availableCurrencies: [],
+		reportRequestResult: ''
 	}),
 	getters: {
 		errors: (state) => state.currencyErrors,
 		results: (state) => state.currencyResults,
 		currencyError: (state) => state.currencySelectError,
-		currencies: (state) => state.availableCurrencies
+		currencies: (state) => state.availableCurrencies,
+		reportRequestResult: (state) => state.reportRequestResult
 	},
 	actions: {
 		async getToken () {
@@ -24,7 +26,6 @@ export const useCurrencyStore = defineStore('currency', {
 				this.currencyResults = null;
 				const response = await axios.get('/api/convert?base=USD&target=' + form.targetCurrency.toString());
 				this.currencyResults = response.data;
-				//console.log(response);
 			} catch (err) {
 				console.log(err);
 			} 
@@ -37,12 +38,23 @@ export const useCurrencyStore = defineStore('currency', {
 			}
 		},
 		handleOpenRequestReportDialog(dialogs) {
-			console.log('here');
 			dialogs.requestReportDialog = true;
 		},
+		async handleRequestReport(data) {
+			try {
+				const response = await axios.post('/api/store-request', {
+					currencies: data.targetCurrency,
+					range: data.range
+				});
+
+
+			} catch (error) {
+				// TODO: For now console log errors, look at detailed exception handling later
+				console.log(error);
+			}
+
+		},
 		async getCurrencies() {
-			// TODO: Fetch available currencies from the 'currencies' table.
-			// TODO: Create currencies table and model
 			try {
 				const response = await axios.get('/api/currencies');
 				let currencies = response.data;

@@ -21,15 +21,15 @@
 	const rangeOptions = ref([
 		{
 			text: 'Range: 1 Year, Interval: Monthly',
-			value: 'yearlyMonthly'
+			value: 'one_year'
 		},
 		{
 			text: 'Range: 6 months, Interval: Weekly',
-			value: 'halfYearlyWeekly'
+			value: 'six_months'
 		},
 		{
 			text: 'Range: 1 month, Interval: Daily',
-			value: 'monthlyDaily'
+			value: 'one_month'
 		}
 	]);
 
@@ -123,7 +123,7 @@
 		<v-card>
 			<v-card-title class="text-left mr-2">Request Report</v-card-title>
 			<v-divider></v-divider>
-			<v-form @submit.prevent="handleReportRequest()">
+			<v-form @submit.prevent="currencyStore.handleRequestReport(requestReportForm)">
 				<v-card-text>
 					<v-row>
 						<v-col cols="12">
