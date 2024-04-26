@@ -9,7 +9,8 @@
 	]);
 
 	let dialogs = ref({
-		requestReportDialog: false
+		requestReportDialog: false,
+		viewReportsDialog: false
 	});
 
 	const currencyConvertForm = ref({
@@ -40,7 +41,9 @@
 	});
 
 	onMounted(async() => {
-		await currencyStore.getCurrencies();
+		if (!currencyStore.currencies.length) {
+			await currencyStore.getCurrencies();
+		}
 	});
 
 </script>
@@ -82,7 +85,6 @@
 				<template v-if="currencyStore.results">
 					<v-divider></v-divider>
 					<v-table class="my-4 border--top" density="compact">
-						
 						<thead>
 							<tr>
 								<th>
@@ -110,20 +112,77 @@
 	</v-card>
 
 	<!-- Request Report Form -->
-	<v-card variant="elevated" elevation="5" class="mt-2">
+	<v-card variant="elevated" elevation="5" class="mt-6">
 		<v-card-title class="text-left ml-2">Request/View Historical Reports</v-card-title>
+		<v-card-text>
+			<v-row>
+				<v-col cols="12">
+				<span v-if="currencyStore.reportResults" class="text-success text-center font-weight-medium">
+					{{ currencyStore.reportResults }}
+				</span>
+				</v-col>
+			</v-row>
+		</v-card-text>
 		<v-card-actions>
 			<v-btn variant="tonal" class="ml-2" @click="currencyStore.handleOpenRequestReportDialog(dialogs)" color="primary">Request Report</v-btn>
 			<v-spacer></v-spacer>
-			<v-btn variant="tonal" class="mr-2" small color="info" :disabled="true">View Report</v-btn>
+			<v-btn variant="tonal" class="mr-2" small color="info" @click="dialogs.viewReportsDialog = true;">View Report</v-btn>
 		</v-card-actions>
 	</v-card>
+
+	<v-dialog v-model="dialogs.viewReportsDialog" max-width="900" min-height="500">
+		<v-card>
+			<v-card-title class="text-left mr-2">View Report Details</v-card-title>
+			<v-divider></v-divider>
+			<v-card-text>
+				<v-row>
+					<v-col cols="12">
+						<div class="text-left font-weight-medium">Select report to view:</div>
+							<v-select
+								density="compact"
+								name="targetReport"
+							/>
+					</v-col>
+				</v-row>
+				<v-container>
+					<template v-if="reportSelected">
+						<v-table class="my-2 border--top" density="compact">
+							<thead>
+								<tr>
+									<th>
+										Base Currency
+									</th>
+									<th>
+										Target Currency
+									</th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</v-table>
+					</template>
+					<template v-else>
+						<v-alert
+								text="Please select a report to view"
+								variant="text"
+								type="info"
+							/>
+					</template>
+					
+				</v-container>
+			</v-card-text>
+			<v-divider></v-divider>
+			<v-card-actions>
+				<v-spacer></v-spacer>
+				<v-btn variant="text" class="mr-2" small color="red" @click="dialogs.viewReportsDialog = false;">Close</v-btn>
+			</v-card-actions>
+		</v-card>
+	</v-dialog>
 
 	<v-dialog v-model="dialogs.requestReportDialog" max-width="700">
 		<v-card>
 			<v-card-title class="text-left mr-2">Request Report</v-card-title>
 			<v-divider></v-divider>
-			<v-form @submit.prevent="currencyStore.handleRequestReport(requestReportForm)">
+			<v-form @submit.prevent="currencyStore.handleRequestReport(requestReportForm, dialogs)">
 				<v-card-text>
 					<v-row>
 						<v-col cols="12">

@@ -8,14 +8,14 @@ export const useCurrencyStore = defineStore('currency', {
 		currencyResults: null,
 		currencySelectError: '',
 		availableCurrencies: [],
-		reportRequestResult: ''
+		requestResults: '',
 	}),
 	getters: {
 		errors: (state) => state.currencyErrors,
 		results: (state) => state.currencyResults,
 		currencyError: (state) => state.currencySelectError,
 		currencies: (state) => state.availableCurrencies,
-		reportRequestResult: (state) => state.reportRequestResult
+		reportResults: (state) => state.requestResults
 	},
 	actions: {
 		async getToken () {
@@ -38,15 +38,21 @@ export const useCurrencyStore = defineStore('currency', {
 			}
 		},
 		handleOpenRequestReportDialog(dialogs) {
+			this.requestResults = '';
 			dialogs.requestReportDialog = true;
 		},
-		async handleRequestReport(data) {
+		async handleRequestReport(data, dialogs) {
 			try {
 				const response = await axios.post('/api/store-request', {
 					currencies: data.targetCurrency,
 					range: data.range
 				});
 
+				if (response.data.success == true) {
+					this.requestResults = response.data.message;
+					dialogs.requestReportDialog = false;
+				}
+				
 
 			} catch (error) {
 				// TODO: For now console log errors, look at detailed exception handling later
