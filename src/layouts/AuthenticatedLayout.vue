@@ -260,10 +260,10 @@
 					</thead>
 					<tbody>
 						<template v-if="Object.keys(currencyStore.currentReport.reportData).length">
-							<tr v-for="(value, index) in Object.entries(currencyStore.currentReport.reportData)">
-								<td class="text-center">{{ value[0] }}</td>
+							<tr v-for="(rate, date, idx) in currencyStore.currentReport.reportData">
+								<td class="text-center">{{ date }}</td>
 								<td class="text-center">1 USD equals</td>
-								<td class="text-center">{{ value[1].toFixed(3) }} {{ currencyStore.currentReport.targetCurrency }}</td>
+								<td class="text-center">{{ rate.toFixed(3) }} {{ currencyStore.currentReport.targetCurrency }}</td>
 							</tr>
 						</template>
 						<template v-else>
