@@ -10,7 +10,7 @@
 
 	let dialogs = ref({
 		requestReportDialog: false,
-		viewReportsDialog: false
+		reportDetailsDialog: false
 	});
 
 	const currencyConvertForm = ref({
@@ -61,12 +61,12 @@
 				<v-row>
 					<v-col cols="4">
 						<div class="text-left font-weight-medium">Amount</div>
-						<v-text-field v-model="currencyConvertForm.amount" type="number" />
+						<v-text-field density="compact" v-model="currencyConvertForm.amount" type="number" />
 					</v-col>
 					<v-col cols="2" />
 					<v-col cols="6">
 						<div class="text-left font-weight-medium">From</div>
-						<v-select v-model="currencyConvertForm.baseCurrency" readonly />
+						<v-select density="compact" v-model="currencyConvertForm.baseCurrency" readonly />
 					</v-col>
 				</v-row>
 				<v-row>
@@ -78,7 +78,7 @@
 						</div>
 						<div class="text-left font-weight-medium">To</div>
 						<v-select 
-							name="toCurrency" v-model="currencyConvertForm.targetCurrency"
+							name="toCurrency" v-model="currencyConvertForm.targetCurrency" density="compact"
 							@update:modelValue="currencyStore.handleToCurrencySelectLimit(currencyConvertForm.targetCurrency)"
 							:items="currencyStore.currencies" item-title="text" item-value="value"
 							chips multiple 
@@ -138,7 +138,7 @@
 						<th class="text-center">Interval</th>
 						<th>Target Currency</th>
 						<th class="text-center">Status</th>
-						<th>Actions</th>
+						<th class="text-center">Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -154,9 +154,12 @@
 									{{ report.status }}
 								</v-chip>
 							</td>
-							<td>
-								<v-btn variant="plain" color="info" :disabled="report.status === 'Pending'">
+							<td class="text-center">
+								<v-btn variant="plain" color="info" :disabled="report.status === 'Pending'" class="ma-0 pa-0" @click="currencyStore.displayReportDetails(id, dialogs)">
 									<v-icon small>mdi-eye</v-icon>
+								</v-btn>
+								<v-btn variant="plain" color="info" :disabled="true" class="ma-0 pa-0">
+									<v-icon small>mdi-chart-timeline-variant</v-icon>
 								</v-btn>
 							</td>
 						</tr>
@@ -175,45 +178,108 @@
 		<v-card-actions>
 			<v-spacer></v-spacer>
 			<v-btn variant="tonal" class="mr-2" @click="currencyStore.handleOpenRequestReportDialog(dialogs)" color="primary">Request Report</v-btn>
-			<!-- <v-btn variant="tonal" class="mr-2" small color="info" @click="dialogs.viewReportsDialog = true;">View Report</v-btn> -->
 		</v-card-actions>
 	</v-card>
 
-	<v-dialog v-model="dialogs.viewReportsDialog" max-width="900" min-height="500">
+	<v-dialog v-model="dialogs.reportDetailsDialog" max-width="900" min-height="500">
 		<v-card>
-			<v-card-title class="text-left mr-2">View Report Details</v-card-title>
+			<v-card-title class="text-left mr-2">Report # {{ currencyStore.currentReport.reportId }} Details</v-card-title>
 			<v-divider></v-divider>
 			<v-card-text>
-				<v-container>
-					<template v-if="reportSelected">
-						<v-table class="my-2 border--top" density="compact">
-							<thead>
-								<tr>
-									<th>
-										Base Currency
-									</th>
-									<th>
-										Target Currency
-									</th>
-								</tr>
-							</thead>
-							<tbody></tbody>
-						</v-table>
-					</template>
-					<template v-else>
-						<v-alert
-								text="Please select a report to view"
-								variant="text"
-								type="info"
-							/>
-					</template>
-					
-				</v-container>
+				<v-list dense class="pa-1 overflow-hidden border-solid">
+					<v-row>
+						<v-col cols="4">
+							<v-list-item>
+								<v-list-item-title>
+									Range
+								</v-list-item-title>
+								<v-list-item-subtitle>
+									{{ currencyStore.currentReport.range }}
+								</v-list-item-subtitle>
+							</v-list-item>
+						</v-col>
+						<v-col cols="4">
+							<v-list-item>
+								<v-list-item-title>
+									Interval
+								</v-list-item-title>
+								<v-list-item-subtitle>
+									{{ currencyStore.currentReport.interval }}
+								</v-list-item-subtitle>
+							</v-list-item>
+						</v-col>
+						<v-col cols="4">
+							<v-list-item>
+								<v-list-item-title>
+									Target Currency
+								</v-list-item-title>
+								<v-list-item-subtitle>
+									{{ currencyStore.currentReport.targetCurrency }}
+								</v-list-item-subtitle>
+							</v-list-item>
+						</v-col>
+					</v-row>
+					<v-divider></v-divider>
+					<v-row>
+						<v-col cols="4">
+							<v-list-item>
+								<v-list-item-title>
+									Requested on:
+								</v-list-item-title>
+								<v-list-item-subtitle>
+									{{ currencyStore.currentReport.requestedAt }}
+								</v-list-item-subtitle>
+							</v-list-item>
+						</v-col>
+						<v-col cols="4">
+							<v-list-item>
+								<v-list-item-title>
+									Completed on:
+								</v-list-item-title>
+								<v-list-item-subtitle>
+									{{ currencyStore.currentReport.responseAt }}
+								</v-list-item-subtitle>
+							</v-list-item>
+						</v-col>
+					</v-row>
+					<v-divider></v-divider>
+				</v-list>
+				<!-- Detail Table -->
+				<v-table class="my-2 border--top" density="compact">
+					<thead>
+						<tr>
+							<th colspan="3">Report Details</th>
+						</tr>
+						<tr >
+							<th class="text-center">
+								{{ currencyStore.currentReport.interval === 'Daily' ? 'Day' : (currencyStore.currentReport.interval === 'Weekly' ? 'Week' : 'Month') }}
+							</th>
+							<th class="text-center">Base Currency</th>
+							<th class="text-center">Exchange Rate</th>
+						</tr>
+					</thead>
+					<tbody>
+						<template v-if="Object.keys(currencyStore.currentReport.reportData).length">
+							<tr v-for="(value, index) in Object.entries(currencyStore.currentReport.reportData)">
+								<td class="text-center">{{ value[0] }}</td>
+								<td class="text-center">1 USD equals</td>
+								<td class="text-center">{{ value[1].toFixed(3) }} {{ currencyStore.currentReport.targetCurrency }}</td>
+							</tr>
+						</template>
+						<template v-else>
+							<tr>
+								<td colspan="6">
+									<h5>Data not found</h5>
+								</td>
+							</tr>
+						</template>
+					</tbody>
+				</v-table>
 			</v-card-text>
 			<v-divider></v-divider>
 			<v-card-actions>
 				<v-spacer></v-spacer>
-				<v-btn variant="text" class="mr-2" small color="red" @click="dialogs.viewReportsDialog = false;">Close</v-btn>
+				<v-btn variant="text" class="mr-2" small color="red" @click="dialogs.reportDetailsDialog = false;">Close</v-btn>
 			</v-card-actions>
 		</v-card>
 	</v-dialog>

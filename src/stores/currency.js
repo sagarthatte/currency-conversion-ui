@@ -9,7 +9,8 @@ export const useCurrencyStore = defineStore('currency', {
 		currencySelectError: '',
 		availableCurrencies: [],
 		requestResults: '',
-		historicalReports: {}
+		historicalReports: {},
+		selectedReport: {}
 	}),
 	getters: {
 		errors: (state) => state.currencyErrors,
@@ -17,7 +18,8 @@ export const useCurrencyStore = defineStore('currency', {
 		currencyError: (state) => state.currencySelectError,
 		currencies: (state) => state.availableCurrencies,
 		reportResults: (state) => state.requestResults,
-		reports: (state) => state.historicalReports
+		reports: (state) => state.historicalReports,
+		currentReport: (state) => state.selectedReport,
 	},
 	actions: {
 		async getToken () {
@@ -74,11 +76,12 @@ export const useCurrencyStore = defineStore('currency', {
 				response.data.forEach((record) => {
 					
 					this.historicalReports[record.id] = {
+						'reportId': record.id,
 						'targetCurrency': record.currency,
 						'range': this.formatRange(record.range),
 						'interval': record.interval.charAt(0).toUpperCase() + record.interval.slice(1),
 						'requestedAt': record.request_at,
-						'reportDetails': record.response_data,
+						'reportData': Object.keys(record.response_data).length ? JSON.parse(record.response_data) : record.response_data,
 						'responseAt': record.response_at,
 						'status': record.status.charAt(0).toUpperCase() + record.status.slice(1)
 					}
@@ -102,6 +105,15 @@ export const useCurrencyStore = defineStore('currency', {
 			} catch (error) {
 				console.log(error);
 			}
+		},
+		displayReportDetails (reportId, dialogs) {
+
+			const selectedReportDetails = this.historicalReports[reportId];
+			if (Object.keys(selectedReportDetails).length) {
+				this.selectedReport = selectedReportDetails;
+				dialogs.reportDetailsDialog = true;
+			}
+			
 		}
 	}
 });
