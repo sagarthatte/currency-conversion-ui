@@ -9,13 +9,15 @@ export const useCurrencyStore = defineStore('currency', {
 		currencySelectError: '',
 		availableCurrencies: [],
 		requestResults: '',
+		historicalReports: {}
 	}),
 	getters: {
 		errors: (state) => state.currencyErrors,
 		results: (state) => state.currencyResults,
 		currencyError: (state) => state.currencySelectError,
 		currencies: (state) => state.availableCurrencies,
-		reportResults: (state) => state.requestResults
+		reportResults: (state) => state.requestResults,
+		reports: (state) => state.historicalReports
 	},
 	actions: {
 		async getToken () {
@@ -41,6 +43,7 @@ export const useCurrencyStore = defineStore('currency', {
 			this.requestResults = '';
 			dialogs.requestReportDialog = true;
 		},
+		// TODO: Create method to refresh form data when certain actions happen i.e. dialog close.
 		async handleRequestReport(data, dialogs) {
 			try {
 				const response = await axios.post('/api/store-request', {
@@ -59,6 +62,31 @@ export const useCurrencyStore = defineStore('currency', {
 				console.log(error);
 			}
 
+		},
+		formatRange(range) {
+			let rangeArr = range.split('_');
+			return rangeArr[0].charAt(0).toUpperCase() + rangeArr[0].slice(1) + ' ' + rangeArr[1].charAt(0).toUpperCase() + rangeArr[1].slice(1);
+		},
+		async getHistoricalReports() {
+			this.historicalReports = {};
+			try {
+				const response = await axios.get('/api/historical-reports');
+				response.data.forEach((record) => {
+					
+					this.historicalReports[record.id] = {
+						'targetCurrency': record.currency,
+						'range': this.formatRange(record.range),
+						'interval': record.interval.charAt(0).toUpperCase() + record.interval.slice(1),
+						'requestedAt': record.request_at,
+						'reportDetails': record.response_data,
+						'responseAt': record.response_at,
+						'status': record.status.charAt(0).toUpperCase() + record.status.slice(1)
+					}
+				});
+				//this.historicalReports = response.data;
+			} catch (error) {
+				console.log(error);
+			}
 		},
 		async getCurrencies() {
 			try {

@@ -44,13 +44,17 @@
 		if (!currencyStore.currencies.length) {
 			await currencyStore.getCurrencies();
 		}
+		// Fetch also the reports for this user (pending and completed)
+		if (!currencyStore.reports.length) {
+			await currencyStore.getHistoricalReports();
+		}
 	});
 
 </script>
 
 <template>
 	<v-card variant="elevated" elevation="5">
-		<v-card-title class="text-left ml-2">Currency Conversion</v-card-title>
+		<v-card-title class="text-left ml-2">Live Currency Rates</v-card-title>
 		<v-divider></v-divider>
 		<v-form @submit.prevent="currencyStore.handleCurrencyConvert(currencyConvertForm)">
 			<v-card-text>
@@ -113,20 +117,65 @@
 
 	<!-- Request Report Form -->
 	<v-card variant="elevated" elevation="5" class="mt-6">
-		<v-card-title class="text-left ml-2">Request/View Historical Reports</v-card-title>
+		<v-card-title class="text-left ml-2">
+			<span>Historical Reports</span>
+			<v-btn size="small" variant="outlined" color="primary" class="ml-2" absolute right top>
+				<v-icon>mdi-refresh</v-icon>
+			</v-btn>
+		</v-card-title>
+		<v-divider></v-divider>
 		<v-card-text>
-			<v-row>
-				<v-col cols="12">
-				<span v-if="currencyStore.reportResults" class="text-success text-center font-weight-medium">
-					{{ currencyStore.reportResults }}
-				</span>
-				</v-col>
-			</v-row>
+			<!-- TODO: Put badge at top specifying base currency as USD -->
+			<v-table class="my-2 border--top" density="compact">
+				<thead>
+					<tr>
+						<th colspan="7">Report Requests</th>
+					</tr>
+					<tr>
+						<th width="5%">ID</th>
+						<th class="text-left">Request Date</th>
+						<th class="text-center">Range</th>
+						<th class="text-center">Interval</th>
+						<th>Target Currency</th>
+						<th class="text-center">Status</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<template v-if="Object.keys(currencyStore.reports).length">
+						<tr v-for="(report, id) in currencyStore.reports" :key="id" :id="id">
+							<td>{{ id }}</td>
+							<td class="text-left">{{ report.requestedAt }}</td>
+							<td class="text-center">{{ report.range }}</td>
+							<td class="text-center">{{ report.interval }}</td>
+							<td>{{ report.currency }}</td>
+							<td class="text-center">
+								<v-chip size="small" label variant="elevated" :color="report.status === 'Completed' ? 'green' : 'orange'">
+									{{ report.status }}
+								</v-chip>
+							</td>
+							<td>
+								<v-btn variant="plain" color="info" :disabled="report.status === 'Pending'">
+									<v-icon small>mdi-eye</v-icon>
+								</v-btn>
+							</td>
+						</tr>
+					</template>
+					<template v-else>
+						<tr>
+							<td colspan="6">
+								<h5>User does not have any pending or completed historical reports</h5>
+							</td>
+						</tr>
+					</template>
+				</tbody>
+			</v-table>			
 		</v-card-text>
+		<v-divider></v-divider>
 		<v-card-actions>
-			<v-btn variant="tonal" class="ml-2" @click="currencyStore.handleOpenRequestReportDialog(dialogs)" color="primary">Request Report</v-btn>
 			<v-spacer></v-spacer>
-			<v-btn variant="tonal" class="mr-2" small color="info" @click="dialogs.viewReportsDialog = true;">View Report</v-btn>
+			<v-btn variant="tonal" class="mr-2" @click="currencyStore.handleOpenRequestReportDialog(dialogs)" color="primary">Request Report</v-btn>
+			<!-- <v-btn variant="tonal" class="mr-2" small color="info" @click="dialogs.viewReportsDialog = true;">View Report</v-btn> -->
 		</v-card-actions>
 	</v-card>
 
@@ -135,15 +184,6 @@
 			<v-card-title class="text-left mr-2">View Report Details</v-card-title>
 			<v-divider></v-divider>
 			<v-card-text>
-				<v-row>
-					<v-col cols="12">
-						<div class="text-left font-weight-medium">Select report to view:</div>
-							<v-select
-								density="compact"
-								name="targetReport"
-							/>
-					</v-col>
-				</v-row>
 				<v-container>
 					<template v-if="reportSelected">
 						<v-table class="my-2 border--top" density="compact">

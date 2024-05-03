@@ -32,10 +32,10 @@
 
 <style>
 	#app {
-		height: 200vh;
+		height: fit-content;
 	}
 	.main-app {
-		width: 800px;
-		height: 800px;
+		width: 1000px;
+		/* height: 800px; */
 	}
 </style>
