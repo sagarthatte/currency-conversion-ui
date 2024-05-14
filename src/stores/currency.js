@@ -28,7 +28,7 @@ export const useCurrencyStore = defineStore('currency', {
 		async handleCurrencyConvert (form) {
 			try {
 				this.currencyResults = null;
-				const response = await axios.get('/api/convert?base=USD&target=' + form.targetCurrency.toString());
+				const response = await axios.get('/api/live-rates?base=USD&target=' + form.targetCurrency.toString());
 				this.currencyResults = response.data;
 			} catch (err) {
 				console.log(err);
