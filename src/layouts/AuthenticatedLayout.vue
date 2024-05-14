@@ -176,6 +176,9 @@
 		</v-card-text>
 		<v-divider></v-divider>
 		<v-card-actions>
+			<v-alert variant="plain" v-if="currencyStore.reportResults" color="primary" class="font-weight-bold pl-0">
+				{{ currencyStore.reportResults }}
+			</v-alert>
 			<v-spacer></v-spacer>
 			<v-btn variant="tonal" class="mr-2" @click="currencyStore.handleOpenRequestReportDialog(dialogs)" color="primary">Request Report</v-btn>
 		</v-card-actions>
