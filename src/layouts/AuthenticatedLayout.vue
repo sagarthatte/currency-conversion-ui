@@ -119,7 +119,7 @@
 	<v-card variant="elevated" elevation="5" class="mt-6">
 		<v-card-title class="text-left ml-2">
 			<span>Historical Reports</span>
-			<v-btn size="small" variant="outlined" color="primary" class="ml-2" absolute right top>
+			<v-btn size="small" variant="outlined" color="primary" class="ml-2" absolute right top @click="currencyStore.getHistoricalReports">
 				<v-icon>mdi-refresh</v-icon>
 			</v-btn>
 		</v-card-title>
@@ -148,15 +148,15 @@
 							<td class="text-left">{{ report.requestedAt }}</td>
 							<td class="text-center">{{ report.range }}</td>
 							<td class="text-center">{{ report.interval }}</td>
-							<td>{{ report.currency }}</td>
+							<td>{{ report.targetCurrency }}</td>
 							<td class="text-center">
 								<v-chip size="small" label variant="elevated" :color="report.status === 'Completed' ? 'green' : 'orange'">
 									{{ report.status }}
 								</v-chip>
 							</td>
 							<td class="text-center">
-								<v-btn variant="plain" color="info" :disabled="report.status === 'Pending'" class="ma-0 pa-0" @click="currencyStore.displayReportDetails(id, dialogs)">
-									<v-icon small>mdi-eye</v-icon>
+								<v-btn size="small" variant="plain" color="info" :disabled="report.status === 'Pending'" class="ma-0 pa-1 text-none" @click="currencyStore.displayReportDetails(id, dialogs)">
+									<v-icon left small>mdi-eye</v-icon>
 								</v-btn>
 								<v-btn variant="plain" color="info" :disabled="true" class="ma-0 pa-0">
 									<v-icon small>mdi-chart-timeline-variant</v-icon>
@@ -268,7 +268,7 @@
 						</template>
 						<template v-else>
 							<tr>
-								<td colspan="6">
+								<td colspan="3">
 									<h5>Data not found</h5>
 								</td>
 							</tr>
